@@ -12,13 +12,13 @@ import org.apache.hadoop.util.ToolRunner;
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
-public class MainTool extends Configured implements Tool{
+public class AggregatedMainTool extends Configured implements Tool{
 
 	public static final String SEPARATOR = "Separator";
 
 	public static void main(String[] args) throws Exception {
 		
-		System.exit(ToolRunner.run(new MainTool(), args));
+		System.exit(ToolRunner.run(new AggregatedMainTool(), args));
 	}
 	
 	@Override
@@ -33,12 +33,12 @@ public class MainTool extends Configured implements Tool{
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
-		job.setMapperClass(Map.class);
-		job.setReducerClass(Reduce.class);
-		job.setCombinerClass(Reduce.class);
-		
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(IntWritable.class);
+		
+		job.setMapperClass(AggregatedMap.class);
+		job.setReducerClass(Reduce.class);
+		job.setCombinerClass(Reduce.class);
 		
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
